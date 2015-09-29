@@ -1,0 +1,23 @@
+use angular;
+use console;
+
+angular.module('kao.stretch', [])
+    .directive('stretchToBottom', fn($window, $document, $timeout) {
+        return {
+            restrict: 'A',
+            replace: true,
+            link: fn (scope, element, attrs) {
+                var originalHeight = undefined;
+                var applyHeight = fn() {
+                    var newHeight = $window.innerHeight - element.offset().top;
+                    element.height(newHeight);
+                };
+                angular.element($window).bind('resize', fn() {
+                    scope.$apply(fn() {
+                        applyHeight();
+                    });
+                });
+                $document.ready(fn() {$timeout(applyHeight, 200);});
+            }
+        };
+    });
